@@ -31,6 +31,8 @@ function formatDecimal(value: number, decimals: number = 2) {
     return Number(value.toFixed(decimals));
 }
 
+export const dynamic = 'force-dynamic' // no caching
+
 export async function GET(req: Request) {
     try {
         const { searchParams } = new URL(req.url);
@@ -39,7 +41,7 @@ export async function GET(req: Request) {
         const nodes = nodeList ? nodeList.split(',') : process.env.NODES_LIST?.split(',');
 
         if (nodes) {
-            let body: ReponseData = {
+            const body: ReponseData = {
                 egress: "0 GB",
                 estimatedPayoutToday: 0,
                 estimatedPayoutTotal: 0,
@@ -56,7 +58,7 @@ export async function GET(req: Request) {
                 const host = nodes[index];
 
                 const { data: snoResponse } = await axios.get(`${host}/api/sno`);
-                const { data: satellitesResponse } = await axios.get(`${host}/api/sno/satellites`);
+                // const { data: satellitesResponse } = await axios.get(`${host}/api/sno/satellites`);
                 const { data: payoutResponse } = await axios.get(`${host}/api/sno/estimated-payout`);
 
                 const node: NodeInformation = {
